@@ -1,0 +1,35 @@
+<div class="row" style="margin-left: 10px;">
+    <form action="/weather_perform" class="row g-1" method="post">
+        <div class="col-auto">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script type="text/javascript"
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY5p5e5PtJuJLl_nRpjefL0S094jdhEP8&libraries=places"></script>
+            <div class="col-lg-2">
+                <input class="form-control" type="text" id="location">
+            </div>
+            <div class="col-lg-2">
+                <input class="form-control" type="text" placeholder="Latitude" id="lat" name="lat">
+            </div>
+            <div class="col-lg-2">
+                <input class="form-control" type="text" placeholder="Longitude" id="long" name="long">
+            </div>
+            <button type="submit" class="btn btn-primary">Check</button>
+            <script type="text/javascript">
+    $(document).ready(function() {
+        var autocomplete;
+        var id = 'location';
+
+        autocomplete = new google.maps.places.Autocomplete((document.getElementById(id)), {
+            types: ['geocode'],
+        })
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            var place = autocomplete.getPlace();
+            jQuery("#lat").val(place.geometry.location.lat());
+            jQuery("#long").val(place.geometry.location.lng());
+        })
+    });
+            </script>
+        </div>
+    </form>
+</div>

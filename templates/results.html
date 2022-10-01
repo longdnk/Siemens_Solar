@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SIEMENS DEMO Community</title>
+    <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <!-- Favicon icon -->
+    <!--   <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">-->
+    <!--   <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">-->
+
+    <link rel="shortcut icon" href="../static/assets/images/Siemens-Demo_Logo.png" type="image/x-icon">
+    <link rel="icon" href="../static/assets/images/Siemens-Demo_Logo.png" type="image/x-icon">
+
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,700" rel="stylesheet">
+
+    <!-- themify -->
+    <link rel="stylesheet" type="text/css" href="../static/assets/icon/themify-icons/themify-icons.css">
+
+    <!-- iconfont -->
+    <link rel="stylesheet" type="text/css" href="../static/assets/icon/icofont/css/icofont.css">
+
+    <!-- simple line icon -->
+    <link rel="stylesheet" type="text/css" href="../static/assets/icon/simple-line-icons/css/simple-line-icons.css">
+
+    <!-- Required Fremwork -->
+    <link rel="stylesheet" type="text/css" href="../static/assets/plugins/bootstrap/css/bootstrap.min.css">
+
+    <!-- Chartlist chart css -->
+    <link rel="stylesheet" href="../static/assets/plugins/chartist/dist/chartist.css" type="text/css" media="all">
+
+    <!-- Weather css -->
+    <link href="../static/assets/css/svg-weather.css" rel="stylesheet">
+
+
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" href="../static/assets/css/main.css">
+
+    <!-- Responsive.css-->
+    <link rel="stylesheet" type="text/css" href="../static/assets/css/responsive.css">
+
+    <script src="static/khoaoccho.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"
+            xmlns="http://www.w3.org/1999/html"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"-->
+    <!--            integrity="sha512-t2JWqzirxOmR9MZKu+BMz0TNHe55G5BZ/tfTmXMlxpUY8tsTo3QMD27QGoYKZKFAraIPDhFv56HLdN11ctmiTQ=="-->
+    <!--            crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+
+</head>
+<body>
+<h2>Visualize: </h2>
+<button class="btn btn-primary" onclick="exportToCsv();">
+    Download data (.csv)
+</button>
+<button class="btn btn-primary" onclick="return PDFexport('LineChart', 'Line chart');">Download line chart</button>
+<button class="btn btn-primary" onclick="return PDFexport('canvas', 'Bar chart');">Download bar chart</button>
+<button class="btn btn-primary" onclick="return backHome();">Back to home page</button>
+</br>
+</br>
+<h3 id="result">The predictions of one device from {{ s }} to {{ e }}</h3>
+
+<!--show the rounded code-->
+<div class="row dashboard-header">
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Maximum Power</span>
+            <h2 id="maximum" class="dashboard-total-products">{{ maximum|round(0)|int }} KWh</h2>
+            <span class="label label-warning">Max</span>
+            Maximum
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Minimum Power</span>
+            <h2 id="minimum" class="dashboard-total-products">{{ minimum|round(0)|int }} KWh</h2>
+            <span class="label label-primary">Min</span>
+            Minimum
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Average Power</span>
+            <h2 id="avg" class="dashboard-total-products">{{ avg|round(0)|int }} KWh</h2>
+            <span class="label label-success">Avg</span>
+            Average
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Sum predict</span>
+            <h2 id="total" class="dashboard-total-products">{{ sum|round(0)|int }} KWh</h2>
+            <span class="label label-danger">Sum</span>
+            Summary
+        </div>
+    </div>
+</div>
+<!--show the raw code -->
+<button type="button" id="toggleBtn" class="btn btn-primary" onclick="toggleTheResults();">
+    Show details
+</button>
+<div style="display: none;" class="row dashboard-header" id="myDIV">
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Maximum Power</span>
+            <h2 id="maximum_hyper_typhoon" class="dashboard-total-products">{{ maximum }} KWh</h2>
+            <span class="label label-warning">Max</span>
+            Maximum
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Minimum Power</span>
+            <h2 id="minimum_hyper_typhoon" class="dashboard-total-products">{{ minimum }} KWh</h2>
+            <span class="label label-primary">Min</span>
+            Minimum
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Average Power</span>
+            <h2 id="avg_hyper_typhoon" class="dashboard-total-products">{{ avg }} KWh</h2>
+            <span class="label label-success">Avg</span>
+            Average
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card dashboard-product">
+            <span>Sum predict</span>
+            <h2 id="total_hyper_typhoon" class="dashboard-total-products">{{ sum }} KWh</h2>
+            <span class="label label-danger">Sum</span>
+            Summary
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<!--add predictions for each day in bar chart-->
+
+{% for x in a %}
+<script>
+    addValue({{ x }});
+</script>
+{% endfor %}
+
+{% for y in b %}
+<script>
+    addDate('{{ y|string }}');
+</script>
+{% endfor %}
+
+<div>
+    <h3>Bar chart</h3>
+    <canvas id="canvas"></canvas>
+</div>
+
+<br/>
+<script>
+        showBarChart();
+</script>
+
+<br/>
+
+<!--add predictions for each month in bar chart-->
+
+<script>
+    clearDateAndValue();
+</script>
+
+{% for x in c %}
+<script>
+    addValue({{ x }});
+</script>
+{% endfor %}
+
+{% for y in d %}
+<script>
+    addDate('{{ y|string }}');
+</script>
+{% endfor %}
+
+<div>
+    <h3>Line chart</h3>
+    <canvas id="LineChart"></canvas>
+</div>
+
+<br/>
+<script>
+        showLineChart();
+</script>
+<!--
+<br/>
+<script>
+        showAll();
+</script>
+-->
+
+</body>
+</html>
+<style>
+        .container {
+            width: 60%;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 46px;
+
+        }
+
+        #canvas {
+            width: 100%;
+        }
+
+        .container_2 {
+            margin-top: 50px;
+            width: 40%;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            display: inline-block;
+        }
+
+        button {
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        button:hover {
+            background-color: #009686;
+        {#transform: 0.5s;#} color: white;
+        }
+
+        {##}
+        {#button:hover {#}
+        {#    background-color: #009686;#}
+        {#    transform: 0.05s;#}
+        {#    color: white;#}
+
+        #}#}
+        {##}
+        {#button:hover {#}
+        {#    background-color: #009686;#}
+        {#    transform: 0.005s;#}
+        {#    color: white;#}
+
+        #}#}
+        {##}
+        {#button:hover {#}
+        {#    background-color: #009686;#}
+        {#    transform: 0.00005s;#}
+        {#    color: white;#}
+        #}#}
+
+
+        .Click div {
+            margin-left: 20px;
+        }
+
+        .Click {
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-div {
+            display: grid;
+            grid-template-columns: auto auto;
+        }
+
+
+
+
+
+</style>
